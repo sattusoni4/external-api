@@ -1,49 +1,49 @@
-usagesPool(percentageConsumption, serviceNumber, firstName,lastName,planName,currentUsage,unitOfMeasure,totalUsage,usagesPoolLeft) ::=
-"Email Subject: You have used <percentageConsumption>% free usage on your service number <serviceNumber>
+usagesPool(percentageConsumption, serviceNumber, firstName,lastName,planName,currentUsage,unitOfMeasure,totalUsage,usagesPoolLeft) ::=<<
+Email Subject: You have used <percentageConsumption>% free usage on your service number <serviceNumber>
 Email Text:
 Dear <firstName> <lastName>,
 You have used <percentageConsumption>% free usage on your service number <serviceNumber>,under
 your service plan <planName>. <usagesPoolLeft(usagesPoolLeft,currentUsage,unitOfMeasure,totalUsage)>
 Thank you,
-Southern Phone Team."
+Southern Phone Team. >>
 
-usagesPoolLeft(usagesPoolLeft,currentUsage,unitOfMeasure,totalUsage) ::=
-"<if(usagesPoolLeft)>You have utilised <currentUsage><unitOfMeasure>
-out of total free usage of <totalUsage><unitOfMeasure>.<endif>"
+usagesPoolLeft(usagesPoolLeft,currentUsage,unitOfMeasure,totalUsage) ::=<<
+<if(usagesPoolLeft)>You have utilised <currentUsage><unitOfMeasure>
+out of total free usage of <totalUsage><unitOfMeasure>.<endif> >>
 
 mobileData(percentageConsumption,serviceNumber,firstName,lastName,planName) ::=
-"Email Subject: You have used <percentageConsumption>% free mobile data on your service number <serviceNumber>
+<<Email Subject: You have used <percentageConsumption>% free mobile data on your service number <serviceNumber>
 Email Text:
 Dear <firstName> <lastName>,
 You have used <percentageConsumption>% free mobile data on your service number <serviceNumber>, under
 your service plan <planName>. We are enabling the Data Boost 1 for you.
 Thank you,
-Southern Phone Team."
+Southern Phone Team.>>
 
 dataBoost(percentageConsumption,dataBoostValue,serviceNumber,firstName,lastName,planName,nextDataBoost,fullUse) ::=
-"Email Subject: You have used <percentageConsumption>% of your Data Boost <dataBoostValue> on your service number <serviceNumber>
+<<Email Subject: You have used <percentageConsumption>% of your Data Boost <dataBoostValue> on your service number <serviceNumber>
 Email Text:
 Dear <firstName> <lastName>,
 You have used <percentageConsumption>% of Data Boost <dataBoostValue> on your service number <serviceNumber>, under
 your service plan <planName>.<nextDataBoost(nextDataBoost)><fullUse(fullUse)>
 Thank you,
-Southern Phone Team."
+Southern Phone Team. >>
 
 nextDataBoost(nextDataBoost) ::=
-"<if(nextDataBoost)>We are enabling the Data Boost <nextDataBoost> for you.<endif>"
+<< <if(nextDataBoost)> We are enabling the Data Boost <nextDataBoost> for you.<endif> >>
 
 creditPool(percentageConsumption,serviceNumber,firstName,lastName,planName,creditPoolLeft,utilisedAmount,totalUsageCredit,fullUse) ::=
-"Email Subject: You have used <percentageConsumption>% of your Usage Credit on your service number <serviceNumber>
+<< Email Subject: You have used <percentageConsumption>% of your Usage Credit on your service number <serviceNumber>
 Email Text:
 Dear <firstName> <lastName>,
 You have used <percentageConsumption>% of your usage credit on your service number <serviceNumber>, under
 your service plan - <planName>.<creditPoolLeft(creditPoolLeft,utilisedAmount,totalUsageCredit)><fullUse(fullUse)>
 Thank you,
-Southern Phone Team."
+Southern Phone Team. >>
 
 creditPoolLeft(creditPoolLeft,utilisedAmount,totalUsageCredit) ::=
-"<if(creditPoolLeft)>You have currently utilised a dollar amount of <utilisedAmount> out
-of total free usage credit of <totalUsageCredit>.<endif>"
+<< <if(creditPoolLeft)> You have currently utilised a dollar amount of <utilisedAmount> out
+of total free usage credit of <totalUsageCredit>.<endif> >>
 
 fullUse(fullUse) ::=
-"<if(fullUse)>Further usage will be charged <fullUse>.<endif>"
+<< <if(fullUse)> Further usage will be charged <fullUse>.<endif> >>

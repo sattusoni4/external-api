@@ -2,6 +2,7 @@ package com.jbilling.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
@@ -11,14 +12,9 @@ public class WookieService {
     private static final STGroup stGroup = new STGroupFile("email.stg");
 
     public String usagesPoolTemplate(JsonNode jsonNode) {
-        ST emailTemplate = stGroup.getInstanceOf("usagesPool");
+        final ST emailTemplate = stGroup.getInstanceOf("usagesPool");
 
-        jsonNode.fieldNames().forEachRemaining(fieldName ->
-                emailTemplate.getAttributes().forEach((attr, value) -> {
-                    if (fieldName.equalsIgnoreCase(attr)) {
-                        emailTemplate.add(attr, jsonNode.get(fieldName).asText());
-                    }
-                }));
+        setTemplateParameters(jsonNode, emailTemplate);
 
         if (jsonNode.get("percentageConsumption").asInt() < 100)
             emailTemplate.add("usagesPoolLeft", "usagesPoolLeft");
@@ -27,15 +23,8 @@ public class WookieService {
     }
 
     public String mobileDataTemplate(JsonNode jsonNode) {
-        ST emailTemplate = stGroup.getInstanceOf("mobileData");
-
-        jsonNode.fieldNames().forEachRemaining(fieldName ->
-                emailTemplate.getAttributes().forEach((attr, value) -> {
-                    if (fieldName.equalsIgnoreCase(attr)) {
-                        emailTemplate.add(attr, jsonNode.get(fieldName).asText());
-                    }
-                }));
-
+        final ST emailTemplate = stGroup.getInstanceOf("mobileData");
+        setTemplateParameters(jsonNode, emailTemplate);
         System.out.println("emailTemplate.render() = " + emailTemplate.render());
         return emailTemplate.render();
     }
@@ -51,14 +40,9 @@ public class WookieService {
                 number.append(c);
             }
         }
-        ST emailTemplate = stGroup.getInstanceOf("dataBoost");
+        final ST emailTemplate = stGroup.getInstanceOf("dataBoost");
 
-        jsonNode.fieldNames().forEachRemaining(fieldName ->
-                emailTemplate.getAttributes().forEach((attr, value) -> {
-                    if (fieldName.equalsIgnoreCase(attr)) {
-                        emailTemplate.add(attr, jsonNode.get(fieldName).asText());
-                    }
-                }));
+        setTemplateParameters(jsonNode, emailTemplate);
         int dataBoostValue = Integer.parseInt(String.valueOf(number));
         emailTemplate.add("dataBoostValue", dataBoostValue);
         if (dataBoostValue < 3)
@@ -70,18 +54,22 @@ public class WookieService {
 
     public String creditPoolTemplate(JsonNode jsonNode) {
         String fullUseForCreditPool = "as per the call rates";
-        ST emailTemplate = stGroup.getInstanceOf("creditPool");
+        final ST emailTemplate = stGroup.getInstanceOf("creditPool");
 
+        setTemplateParameters(jsonNode, emailTemplate);
+        if (jsonNode.get("percentageConsumption").asInt() < 100)
+            emailTemplate.add("creditPoolLeft", "creditPoolLeft");
+        else emailTemplate.add("fullUse", fullUseForCreditPool);
+        System.out.println("emailTemplate.render() = " + emailTemplate.render());
+        return emailTemplate.render();
+    }
+
+    private void setTemplateParameters(JsonNode jsonNode, ST emailTemplate) {
         jsonNode.fieldNames().forEachRemaining(fieldName ->
                 emailTemplate.getAttributes().forEach((attr, value) -> {
                     if (fieldName.equalsIgnoreCase(attr)) {
                         emailTemplate.add(attr, jsonNode.get(fieldName).asText());
                     }
                 }));
-        if (jsonNode.get("percentageConsumption").asInt() < 100)
-            emailTemplate.add("creditPoolLeft", "creditPoolLeft");
-        else emailTemplate.add("fullUse", fullUseForCreditPool);
-        System.out.println("emailTemplate.render() = " + emailTemplate.render());
-        return emailTemplate.render();
     }
 }
